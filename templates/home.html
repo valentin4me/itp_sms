@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1 class="mb-4">Adaugă Client</h1>
+    <form action="/adauga_client" method="post" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <input type="text" name="name" class="form-control" placeholder="Nume" required>
+            </div>
+            <div class="form-group col-md-4">
+                <input type="text" name="phone" class="form-control" placeholder="Număr Telefon" required>
+            </div>
+            <div class="form-group col-md-4">
+                <input type="date" name="itp_date" class="form-control" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Adaugă Client</button>
+    </form>
+
+    <h2>Testare SMS</h2>
+    <form action="/test_sms" method="post" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <input type="text" name="phone" class="form-control" placeholder="Număr Telefon" required>
+            </div>
+            <div class="form-group col-md-6">
+                <input type="text" name="message" class="form-control" placeholder="Mesaj" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Trimite SMS de Test</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "index.html" %}
+{% block content %}
+    <h2>Lista Clienților</h2>
+    <input class="form-control mb-4" id="searchInput" type="text" placeholder="Caută clienți...">
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nume</th>
+                <th>Număr Telefon</th>
+                <th>Data Expirare ITP</th>
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody id="clientsTable">
+            {% for client in clients %}
+                <tr>
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.name }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.itp_date }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDelete({{ client.id }})">Șterge</button>
+                        <button class="btn btn-warning btn-sm" onclick="editClient({{ client.id }}, '{{ client.name }}', '{{ client.phone }}', '{{ client.itp_date }}')">Editează</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal pentru editare -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editează Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" action="/editeaza_client" method="post">
+                        <input type="hidden" name="id" id="editId">
+                        <div class="form-group">
+                            <label for="editName">Nume</label>
+                            <input type="text" class="form-control" id="editName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhone">Număr Telefon</label>
+                            <input type="text" class="form-control" id="editPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editItpDate">Data Expirare ITP</label>
+                            <input type="date" class="form-control" id="editItpDate" name="itp_date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvează</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pentru confirmare ștergere -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmare Ștergere</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ești sigur că vrei să ștergi acest client?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Anulează</button>
+                    <form id="deleteForm" action="" method="post" style="display:inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger">Șterge</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function editClient(id, name, phone, itp_date) {
+            $('#editId').val(id);
+            $('#editName').val(name);
+            $('#editPhone').val(phone);
+            $('#editItpDate').val(itp_date);
+            $('#editModal').modal('show');
+        }
+
+        function confirmDelete(id) {
+            $('#deleteForm').attr('action', '/sterge_client/' + id);
+            $('#deleteModal').modal('show');
+        }
+
+        $(document).ready(function(){
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#clientsTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}
