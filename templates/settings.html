@@ -1,0 +1,59 @@
+{% extends "index.html" %}
+{% block content %}
+    <h2>Statistici</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Clienți</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_clients }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Clienți cu ITP expirat</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ expired_clients }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Clienți cărora le expiră ITP sub 7 zile</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ expiring_soon_clients }}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <canvas id="itpChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('itpChart').getContext('2d');
+        var itpChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ months | safe }},
+                datasets: [{
+                    label: 'Număr Clienți',
+                    data: {{ clients_per_month | safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
